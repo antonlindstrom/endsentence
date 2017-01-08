@@ -44,7 +44,7 @@ func (f *file) funcDocEndsWithPeriod(fn *ast.FuncDecl) *Feedback {
 			Error: lintError{
 				position: f.fileSet.Position(fn.Pos()),
 				name:     fn.Name.Name,
-				msg:      "has comment should end with period",
+				msg:      "comment should end with period",
 			},
 		}
 	}
