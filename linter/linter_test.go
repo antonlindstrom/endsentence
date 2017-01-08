@@ -35,7 +35,8 @@ func TestEndsWithPeriod(t *testing.T) {
 		fs := token.NewFileSet()
 		node, err := parser.ParseFile(fs, "testing.go", test.source, parser.ParseComments)
 		if err != nil {
-			t.Error("want err = nil, got %v", err)
+			t.Errorf("want err = nil, got %v", err)
+			continue
 		}
 
 		f := &file{
@@ -46,7 +47,7 @@ func TestEndsWithPeriod(t *testing.T) {
 
 		feedback := f.checkDoc()
 		if len(feedback) != test.feedbackLen {
-			t.Error("want len(feedback) = 0, got %v", len(feedback))
+			t.Errorf("want len(feedback) = 0, got %v", len(feedback))
 		}
 	}
 }
