@@ -6,5 +6,6 @@ go:
   - tip
 
 script:
+  - make build clean
   - make check
   - make lint
