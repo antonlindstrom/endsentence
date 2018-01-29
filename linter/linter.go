@@ -52,6 +52,26 @@ func (f *file) funcDocEndsWithPeriod(fn *ast.FuncDecl) *Feedback {
 	return nil
 }
 
+// genDocEndsWithPeriod makes sure that the comment for a generic declaration
+// node (import, constant, type or variable) ends with a period.
+func (f *file) genDocEndsWithPeriod(gen *ast.GenDecl) *Feedback {
+	if gen.Doc == nil {
+		return nil
+	}
+
+	if !strings.HasSuffix(strings.TrimSpace(gen.Doc.Text()), ".") {
+		return &Feedback{
+			Error: lintError{
+				position: f.fileSet.Position(gen.Pos()),
+				name:     gen.Tok.String(),
+				msg:      "comment should end with period",
+			},
+		}
+	}
+
+	return nil
+}
+
 // checkDoc walks nodes and includes the checks for documentation.
 func (f *file) checkDoc() []*Feedback {
 	var feedback []*Feedback
@@ -59,6 +79,14 @@ func (f *file) checkDoc() []*Feedback {
 	f.walk(func(n ast.Node) bool {
 		if fn, ok := n.(*ast.FuncDecl); ok {
 			fb := f.funcDocEndsWithPeriod(fn)
+			if fb != nil {
+				feedback = append(feedback, fb)
+			}
+
+			return false
+		}
+		if gen, ok := n.(*ast.GenDecl); ok {
+			fb := f.genDocEndsWithPeriod(gen)
 			if fb != nil {
 				feedback = append(feedback, fb)
 			}
