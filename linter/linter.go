@@ -116,7 +116,7 @@ func (w walker) Visit(node ast.Node) ast.Visitor {
 	return nil
 }
 
-// Lint takes filenames to go source files and returns feedback
+// Lint takes filenames to go source files and returns feedback.
 func Lint(filenames ...string) ([]*Feedback, error) {
 	var feedback []*Feedback
 	fs := token.NewFileSet()
