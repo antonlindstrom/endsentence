@@ -42,7 +42,7 @@ func (f *file) funcDocEndsWithPeriod(fn *ast.FuncDecl) *Feedback {
 	if !strings.HasSuffix(strings.TrimSpace(fn.Doc.Text()), ".") {
 		return &Feedback{
 			Error: lintError{
-				position: f.fileSet.Position(fn.Pos()),
+				position: f.fileSet.Position(fn.Doc.Pos()),
 				name:     fn.Name.Name,
 				msg:      "comment should end with period",
 			},
@@ -60,10 +60,17 @@ func (f *file) genDocEndsWithPeriod(gen *ast.GenDecl) *Feedback {
 	}
 
 	if !strings.HasSuffix(strings.TrimSpace(gen.Doc.Text()), ".") {
+		name := gen.Tok.String()
+		for _, g := range gen.Specs {
+			if g, ok := g.(*ast.TypeSpec); ok {
+				name = g.Name.Name
+			}
+		}
+
 		return &Feedback{
 			Error: lintError{
-				position: f.fileSet.Position(gen.Pos()),
-				name:     gen.Tok.String(),
+				position: f.fileSet.Position(gen.Doc.Pos()),
+				name:     name,
 				msg:      "comment should end with period",
 			},
 		}
