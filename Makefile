@@ -2,18 +2,24 @@
 
 TAG:=$(shell git rev-parse --short HEAD --dirty)
 
-build: endsentence
+SRCS=$(wildcard *.go */*/*.go */*.go)
 
-endsentence: main.go linter/linter.go
-	go build -ldflags "-X main.buildref=$(TAG)"
+COMMANDS=$(wildcard cmd/*)
+BIN_TARGETS=$(addprefix bin/, $(COMMANDS:cmd/%=%))
+
+build: $(BIN_TARGETS)
+
+$(BIN_TARGETS): $(SRCS)
+	mkdir -p bin/
+	go build -ldflags "-X main.buildref=$(TAG)" -o bin/$(@:bin/%=%) cmd/$(@:bin/%=%)/main.go
 
 .PHONY: clean
 clean:
-	-rm -r endsentence
+	-rm $(BIN_TARGETS)
 
 .PHONY: check
 check:
-	go test -race -cover -v ./linter/...
+	go test -race -cover -v ./...
 
 .PHONY: lint
 lint:
