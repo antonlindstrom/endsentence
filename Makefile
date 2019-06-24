@@ -23,6 +23,5 @@ check:
 
 .PHONY: lint
 lint:
-	which gometalinter > /dev/null || go get github.com/alecthomas/gometalinter
-	gometalinter --install
-	gometalinter --disable=gotype ./... --fast --deadline=10s
+	golangci-lint --version &> /dev/null || GO111MODULE=on go get github.com/golangci/golangci-lint/cmd/golangci-lint@v1.17.1
+	golangci-lint run --enable-all -D gochecknoglobals -D typecheck

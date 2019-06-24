@@ -1,7 +1,14 @@
 language: go
 
+before_install:
+  - curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh| sh -s -- -b /home/travis/gopath/bin v1.17.1
+  - sudo mv /home/travis/gopath/bin/golangci-lint /usr/bin/golangci-lint
+
+env:
+  - GO111MODULE=on
+
 go:
-  - 1.11
+  - 1.12
   - tip
 
 script:
