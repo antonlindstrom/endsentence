@@ -11,7 +11,7 @@ import (
 var buildref string
 
 func main() {
-	var version = flag.Bool("version", false, "Print build version")
+	version := flag.Bool("version", false, "Print build version")
 	flag.Parse()
 
 	if *version {
